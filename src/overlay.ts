@@ -131,6 +131,19 @@ function createOverlaySvg(stage: StageDefinition): SVGSVGElement {
   svg.style.width = "100%";
   svg.style.height = "100%";
 
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  const filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
+  const feGaussianBlur = document.createElementNS("http://www.w3.org/2000/svg", "feGaussianBlur");
+  filter.setAttribute("id", "f1");
+  filter.setAttribute("x", "0");
+  filter.setAttribute("y", "0");
+  feGaussianBlur.setAttribute("in", "SourceGraphic");
+  feGaussianBlur.setAttribute("stdDeviation", "15");
+  filter.appendChild(feGaussianBlur);
+  defs.appendChild(filter);
+
+  svg.appendChild(defs);
+
   const stagePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
   stagePath.setAttribute("d", generateStageSvgPathString(stage));
@@ -139,6 +152,8 @@ function createOverlaySvg(stage: StageDefinition): SVGSVGElement {
   stagePath.style.opacity = `${getConfig("overlayOpacity")}`;
   stagePath.style.pointerEvents = "auto";
   stagePath.style.cursor = "auto";
+
+  stagePath.setAttribute("filter", "url(#f1)");
 
   svg.appendChild(stagePath);
 
